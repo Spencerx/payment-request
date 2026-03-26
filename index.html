@@ -1043,7 +1043,7 @@
           </li>
           <li data-tests="rejects_if_not_active.https.html">If |document| is
           not [=Document/fully active=], then return <a>a promise rejected
-          with</a> an {{"AbortError"}} {{DOMException}}.
+          with</a> an {{"InvalidStateError"}} {{DOMException}}.
           </li>
           <li>If |document|'s [=Document/visibility state=] is not `"visible"`,
           then return <a>a promise rejected with</a> an {{"AbortError"}}
@@ -1332,8 +1332,16 @@
             <ol>
               <li>Close down the user interface.
               </li>
+              <li>Set |request|.{{PaymentRequest/[[state]]}} to
+              "[=PaymentRequest/closed=]".
+              </li>
               <li>Set |request|'s <a>payment-relevant browsing context</a>'s
               <a>payment request is showing</a> boolean to false.
+              </li>
+              <li>
+                <a>Queue a task</a> on the <a>user interaction task source</a>
+                to [=reject=] |acceptPromise| with an {{"AbortError"}}
+                {{DOMException}}.
               </li>
             </ol>
           </li>
@@ -2489,7 +2497,7 @@
           <li data-tests=
           "payment-response/rejects_if_not_active-manual.https.html">If
           |document| is not [=Document/fully active=], then return <a>a promise
-          rejected with</a> an {{"AbortError"}} {{DOMException}}.
+          rejected with</a> an {{"InvalidStateError"}} {{DOMException}}.
           </li>
           <li>If |response|.{{PaymentResponse/[[complete]]}} is true, return
           <a>a promise rejected with</a> an {{"InvalidStateError"}}
@@ -2590,8 +2598,16 @@
             <ol>
               <li>Close down the user interface.
               </li>
+              <li>Set |request|.{{PaymentRequest/[[state]]}} to
+              "[=PaymentRequest/closed=]".
+              </li>
               <li>Set |request|'s <a>payment-relevant browsing context</a>'s
               <a>payment request is showing</a> boolean to false.
+              </li>
+              <li>
+                <a>Queue a task</a> on the <a>user interaction task source</a>
+                to [=reject=] |retryPromise| with an {{"AbortError"}}
+                {{DOMException}}.
               </li>
             </ol>
           </li>
@@ -2921,6 +2937,11 @@
               </li>
               <li>Set |request|'s <a>payment-relevant browsing context</a>'s
               <a>payment request is showing</a> boolean to false.
+              </li>
+              <li>
+                <a>Queue a task</a> on the <a>user interaction task source</a>
+                to [=reject=] |promise| with an {{"AbortError"}}
+                {{DOMException}}.
               </li>
             </ol>
           </li>
@@ -3505,6 +3526,13 @@
           <li>If |request|.{{PaymentRequest/[[state]]}} is not
           "[=PaymentRequest/created=]", then return <a>a promise rejected
           with</a> an {{"InvalidStateError"}} {{DOMException}}.
+          </li>
+          <li>Let |document| be |request|'s [=relevant global object=]'s
+          [=associated `Document`=].
+          </li>
+          <li>If |document| is not [=Document/fully active=], then return
+          <a>a promise rejected with</a> an {{"InvalidStateError"}}
+          {{DOMException}}.
           </li>
           <li data-tests="">Optionally, at the <a>top-level browsing
           context</a>'s discretion, return <a>a promise rejected with</a> a
